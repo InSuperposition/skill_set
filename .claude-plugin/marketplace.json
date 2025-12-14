@@ -1,0 +1,27 @@
+{
+	"name": "InSuperposition",
+	"owner": {
+		"name": "Forrest Galloway",
+		"email": "f.galloway@gmail.com",
+		"url": "https://github.com/InSuperposition"
+	},
+	"metadata": {
+		"description": "A marketplace of skill sets",
+		"version": "0.0.1",
+		"homepage": "https://github.com/InSuperposition/skillset"
+	},
+	"plugins": [
+		{
+			"name": "code",
+			"source": "./data/code"
+		},
+		{
+			"name": "git",
+			"source": "./data/git"
+		},
+		{
+			"name": "reasoning",
+			"source": "./data/reasoning"
+		}
+	]
+}

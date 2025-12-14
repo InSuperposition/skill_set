@@ -20,6 +20,10 @@
 			"source": "./data/git"
 		},
 		{
+			"name": "javascript",
+			"source": "./data/javascript"
+		},
+		{
 			"name": "reasoning",
 			"source": "./data/reasoning"
 		}

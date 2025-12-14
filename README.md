@@ -8,7 +8,7 @@
 
 ## Overview
 
-The InSuperposition Skills Marketplace is a comprehensive collection of specialized AI agent skills organized into three unified categories. Each skill is designed with a consistent philosophy of **safety-first**, **evidence-based**, and **simplicity-driven** approaches.
+The InSuperposition Skills Marketplace is a comprehensive collection of specialized AI agent skills organized into four unified categories. Each skill is designed with a consistent philosophy of **safety-first**, **evidence-based**, and **simplicity-driven** approaches.
 
 ### Key Features
 
@@ -122,19 +122,45 @@ Use skill-reasoning through the 5-mode workflow:
 5. Decide: Synthesize into recommendation with validation plan
 ```
 
+### 4. JavaScript - Unified JavaScript & TypeScript Mastery Skillset
+
+**[skill-javascript](data/javascript/SKILL.md)** - Unified JavaScript and TypeScript mastery skillset covering language features (ES2015+), performance optimization (V8 internals), type safety (TypeScript), functional programming, and design patterns.
+
+**Core Capabilities:**
+
+- Language mastery (ES2015+ features, async/await, modules, closures, iterators, generators)
+- Performance optimization (V8 internals, JIT compilation, memory management, algorithmic analysis)
+- Type safety (advanced TypeScript types, generics, utility types, type guards)
+- Functional programming (pure functions, immutability, composition, higher-order functions)
+- Design patterns (GoF patterns, module patterns, architectural solutions)
+
+**Operating Principles:**
+
+- **Modern standards first** - Prioritize ES2015+ features over legacy patterns
+- **Type safety as enabler** - Types prevent bugs without sacrificing flexibility
+- **Performance through understanding** - Optimize based on V8 internals and measurements
+- **Functional when appropriate** - Immutability and purity improve reliability
+- **Patterns solve problems** - Apply patterns when they reduce complexity
+
+#### JavaScript Development Workflow
+
+```md
+Use skill-javascript across 5 operational modes:
+
+1. Language Mode: Modernize code with ES2015+, master async patterns
+2. Performance Mode: Optimize V8 performance, analyze complexity
+3. TypeScript Mode: Add type safety, design type architectures
+4. Functional Mode: Apply functional patterns, ensure immutability
+5. Patterns Mode: Implement design patterns, structure architecture
+```
+
 ## Contributing
 
 ### Skill Format
 
-All skills follow a consistent format:
+All skills follow a consistent markdown format:
 
 ```markdown
----
-name: skill-name
-description: Brief description of the skill's purpose
-allowed-tools: Read, Write, Grep, Glob, Bash, TodoWrite
----
-
 # Skill Name
 
 ## Overview
@@ -145,6 +171,15 @@ allowed-tools: Read, Write, Grep, Glob, Bash, TodoWrite
 
 ## Operating Principles
 [Core principles that guide the skill]
+
+## Operational Modes (for unified skills)
+[Description of the different modes of operation]
+
+## Core Capabilities
+[Key capabilities and features]
+
+## Standard Workflow
+[Step-by-step workflow]
 
 ## [Additional sections as needed]
 ```
@@ -164,6 +199,13 @@ data/
     SKILL.md                    # Main unified skill
     guide/SKILL.md              # Specialized subskill
     ...
+  javascript/
+    SKILL.md                    # Main unified skill
+    language/SKILL.md           # Specialized subskill
+    performance/SKILL.md
+    typescript/SKILL.md
+    functional/SKILL.md
+    patterns/SKILL.md
   reasoning/
     SKILL.md                    # Main unified skill
     problem-framing/SKILL.md    # Specialized subskill
@@ -175,20 +217,11 @@ data/
 
 ### Adding New Skills
 
-1. Create a new directory under the appropriate category (`data/code/`, `data/git/`, `data/reasoning/`)
-2. Add a `SKILL.md` file
-3. Include required fields: `name`, `description`, `allowed-tools`
-4. Follow the established format and operating principles
-5. Update the parent category's SKILL.md to reference the new subskill
-6. Submit a pull request with your new skill
-
-### YAML Frontmatter Fields
-
-Required fields:
-
-- `name`: Skill identifier (e.g., `skill-code-reviewer`)
-- `description`: One-sentence description of the skill's purpose
-- `allowed-tools`: Comma-separated list of tools the skill can use
+1. Create a new directory under the appropriate category (`data/code/`, `data/git/`, `data/javascript/`, `data/reasoning/`)
+2. Add a `SKILL.md` file following the standard markdown format
+3. Follow the established format and operating principles
+4. Update the parent category's SKILL.md to reference the new subskill
+5. Submit a pull request with your new skill
 
 ## License
 

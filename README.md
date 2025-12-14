@@ -12,9 +12,9 @@ The InSuperposition Skills Marketplace is a comprehensive collection of speciali
 
 ### Key Features
 
-- **52+ specialized skills** across code quality, Git operations, and reasoning frameworks
+- **Specialized skills** across code quality, Git operations, and reasoning frameworks
 - **Zero external dependencies** - works across all tech stacks and languages
-- **5 operational modes** per main skill for flexible workflow integration
+- **Operational modes** per main skill for flexible workflow integration
 - **Modular architecture** - use unified skills as entry points or specialized subskills for depth
 - **Safety protocols** - minimal, reversible changes with explicit verification steps
 
@@ -46,10 +46,10 @@ git clone https://github.com/InSuperposition/skillset.git
 git clone https://github.com/InSuperposition/skillset.git
 
 # Reference skill files directly from data/ directories
-# Each skill is defined in a SKILL.md file with YAML frontmatter
+# Each skill is defined in a SKILL.md file
 ```
 
-## The Three Core Skills
+## The Core Skills
 
 ### 1. Code - Unified Code Quality Skillset
 
@@ -64,30 +64,6 @@ git clone https://github.com/InSuperposition/skillset.git
 - Architecture (boundaries, layering, responsibility separation)
 - Performance (complexity, query patterns, caching, memory behavior)
 
-### 2. Git - Unified Git Skillset
-
-**[skill-git](data/git/SKILL.md)** - Generalized Git skillset that unifies advisory guidance, safe execution, workflow specialization, and recovery.
-
-**Core Capabilities:**
-
-- Workflow specialization (worktrees, submodules, rebasing, notes)
-- Safety protocols and decision discipline for risky operations
-- Troubleshooting and recovery using reflog and backups
-- Repository maintenance via health checks and configuration
-
-### 3. Reasoning - Unified Thinking Skillset
-
-**[skill-reasoning](data/reasoning/SKILL.md)** - Generalized reasoning skillset with 5 core operational modes plus framework modes. Turns ambiguity into clarity and produces decisions with explicit rationale.
-
-**Operating Principles:**
-
-- **Facts before stories** - Label observations vs interpretations vs assumptions
-- **Make constraints explicit** - Distinguish real constraints from assumed constraints
-- **Prefer falsifiable claims** - Turn beliefs into tests and predictions
-- **Simplicity first** - Reduce coupling and complexity debt
-
-## Usage Examples
-
 ### Code Review Workflow
 
 ```md
@@ -100,7 +76,18 @@ Use skill-code in Review mode to evaluate a pull request:
 5. Suggest minimal patches that address top issues
 ```
 
-### Git Operation Workflow
+### 2. Git - Unified Git Skillset
+
+**[skill-git](data/git/SKILL.md)** - Generalized Git skillset that unifies advisory guidance, safe execution, workflow specialization, and recovery.
+
+**Core Capabilities:**
+
+- Workflow specialization (worktrees, submodules, rebasing, notes)
+- Safety protocols and decision discipline for risky operations
+- Troubleshooting and recovery using reflog and backups
+- Repository maintenance via health checks and configuration
+
+#### Git Operation Workflow
 
 ```md
 Use skill-git in Worker mode for safe Git operations:
@@ -112,7 +99,18 @@ Use skill-git in Worker mode for safe Git operations:
 5. Confirm success and provide recovery instructions if needed
 ```
 
-### Problem-Solving Workflow
+### 3. Reasoning - Unified Thinking Skillset
+
+**[skill-reasoning](data/reasoning/SKILL.md)** - Generalized reasoning skillset with core operational modes plus framework modes. Turns ambiguity into clarity and produces decisions with explicit rationale.
+
+**Operating Principles:**
+
+- **Facts before stories** - Label observations vs interpretations vs assumptions
+- **Make constraints explicit** - Distinguish real constraints from assumed constraints
+- **Prefer falsifiable claims** - Turn beliefs into tests and predictions
+- **Simplicity first** - Reduce coupling and complexity debt
+
+#### Problem-Solving Workflow
 
 ```md
 Use skill-reasoning through the 5-mode workflow:
@@ -178,7 +176,7 @@ data/
 ### Adding New Skills
 
 1. Create a new directory under the appropriate category (`data/code/`, `data/git/`, `data/reasoning/`)
-2. Add a `SKILL.md` file with YAML frontmatter
+2. Add a `SKILL.md` file
 3. Include required fields: `name`, `description`, `allowed-tools`
 4. Follow the established format and operating principles
 5. Update the parent category's SKILL.md to reference the new subskill
@@ -192,18 +190,6 @@ Required fields:
 - `description`: One-sentence description of the skill's purpose
 - `allowed-tools`: Comma-separated list of tools the skill can use
 
-## Project Information
-
-**Marketplace Name:** InSuperposition
-**Owner:** Forrest Galloway ([f.galloway@gmail.com](mailto:f.galloway@gmail.com))
-**Version:** 0.0.1
-**Repository:** [https://github.com/InSuperposition/skillset](https://github.com/InSuperposition/skillset)
-**Homepage:** [https://github.com/InSuperposition/skillset](https://github.com/InSuperposition/skillset)
-
 ## License
 
 See repository for license information.
-
----
-
-Built with care for safety-first, evidence-based, and simplicity-driven AI agent skills.

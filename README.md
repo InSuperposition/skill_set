@@ -31,7 +31,7 @@ All skills in this marketplace share core operating principles:
 
 ### As a Claude Code Marketplace
 
-```bash
+```sh
 # Clone the repository
 git clone https://github.com/InSuperposition/skillset.git
 
@@ -41,7 +41,7 @@ git clone https://github.com/InSuperposition/skillset.git
 
 ### Manual Usage
 
-```bash
+```sh
 # Clone the repository
 git clone https://github.com/InSuperposition/skillset.git
 

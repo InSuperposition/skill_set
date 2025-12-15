@@ -4,7 +4,7 @@
 
 JavaScript Patterns mode provides expert guidance on design patterns, architectural patterns, and proven solutions for JavaScript/TypeScript applications. It helps you recognize pattern opportunities, implement Gang of Four (GoF) patterns, organize code with module patterns, design event-driven systems, manage state effectively, and apply best practices for scalable, maintainable applications.
 
-**Philosophy**: Patterns solve problems - apply design patterns when they reduce complexity, not for their own sake. Recognize when a pattern fits naturally.
+**Philosophy**: Patterns solve problems - apply design patterns when they reduce complexity, not for their own sake. **Prioritize functional patterns with composable functions and simple data structures over class-based object-oriented approaches**. Recognize when a pattern fits naturally.
 
 ## Requirements
 
@@ -14,78 +14,79 @@ Works with any JavaScript/TypeScript codebase. Patterns are implemented in vanil
 
 ## Core Capabilities
 
-**Creational Patterns** (object creation):
+**Functional Patterns** (PREFERRED - composable functions):
 
-- Singleton (single global instance)
-- Factory (create objects without specifying exact class)
-- Abstract Factory (family of related objects)
-- Builder (construct complex objects step by step)
-- Prototype (clone objects)
+- Higher-Order Functions (functions that take/return functions)
+- Function Composition (combine small functions into larger ones)
+- Currying & Partial Application (pre-fill function arguments)
+- Pure Functions (no side effects, predictable outputs)
+- Immutable Data Transformations (map, filter, reduce)
+- Function Pipelines (data flows through transformations)
+- Closures for Encapsulation (private state without classes)
+- Strategy via Functions (pass behavior as functions)
+- Decorator via Higher-Order Functions (wrap functions to add behavior)
 
-**Structural Patterns** (object composition):
+**Data Structure Patterns** (simple, composable):
 
+- Plain Objects (simple key-value maps)
+- Arrays & Array Methods (map, filter, reduce, etc.)
+- Unique values (Set)
+- Discriminated Unions (tagged objects for state)
+- Nested Data Structures (trees, graphs as plain objects/arrays)
+- Record/Dictionary Patterns (lookups without classes)
+
+**Classical OOP Patterns** (use sparingly when functional approach is insufficient):
+
+- Factory Functions (preferred over classes for object creation)
+- Singleton via Module (single instance through module system)
+- Observer/PubSub (event subscription)
 - Adapter (interface conversion)
-- Decorator (add behavior dynamically)
-- Facade (simplified interface)
-- Proxy (placeholder/wrapper)
-- Composite (tree structures)
-- Flyweight (share common state for efficiency)
-
-**Behavioral Patterns** (object interaction):
-
-- Observer (event subscription/notification)
-- Strategy (interchangeable algorithms)
-- Command (encapsulate requests as objects)
-- Iterator (sequential access)
-- State (behavior changes with state)
-- Template Method (algorithm skeleton)
-- Mediator (centralized communication)
-- Chain of Responsibility (pass requests along chain)
+- Proxy (wrapper for control/enhancement)
+- State Machine (using discriminated unions preferred)
 
 **Module Patterns**:
 
-- Module Pattern (IIFE-based encapsulation)
-- Revealing Module Pattern (explicit public API)
-- ES6 Modules (import/export)
-- Namespace Pattern (avoid global pollution)
-- Dependency Injection (inversion of control)
+- ES6 Modules (import/export - PREFERRED)
+- Module as Namespace (group related functions)
+- Dependency Injection via Function Parameters (pass dependencies explicitly)
+- Closures for Module Privacy (avoid classes when possible)
 
-**Async Patterns**:
+**Async Patterns** (functional approach):
 
-- Promise chaining
-- Async/await patterns
-- Parallel execution (Promise.all)
-- Sequential execution
-- Retry with backoff
-- Circuit breaker
-- Event aggregation
+- Promise composition (chaining transformations)
+- Async/await with pure functions
+- Parallel execution (Promise.all, Promise.allSettled)
+- Sequential execution via reduce or for-await
+- Retry with backoff (higher-order function)
+- Error handling with Either/Result types
+- Async pipelines
 
-**Architectural Patterns**:
+**Architectural Patterns** (functional-first approach):
 
-- MVC (Model-View-Controller)
-- MVP (Model-View-Presenter)
-- MVVM (Model-View-ViewModel)
-- Flux/Redux (unidirectional data flow)
-- Event-driven architecture
-- Layered architecture
-- Plugin architecture
+- Unidirectional Data Flow (Flux/Redux with reducers as pure functions)
+- Event-driven with Functions (pub/sub using plain functions)
+- Layered architecture with Function Modules
+- Plugin via Higher-Order Functions
+- Composable Middleware (function composition)
+- Functional Core, Imperative Shell (isolate I/O from logic)
 
-**State Management Patterns**:
+**State Management Patterns** (immutable, functional):
 
-- Centralized store (Redux-style)
-- State machines (finite state machine)
-- Command pattern for state updates
-- Observer pattern for subscriptions
-- Immutable state updates
+- Reducers (pure functions: (state, action) => newState)
+- State machines using discriminated unions
+- Immutable updates (spread operators, structural sharing)
+- Lenses/Optics for nested updates
+- Event sourcing (state derived from event history)
+- Transducers for efficient state transformations
 
-**Error Handling Patterns**:
+**Error Handling Patterns** (functional approach):
 
-- Try-catch boundaries
-- Error middleware/interceptors
-- Result type pattern (Either/Result)
-- Error event emitters
-- Global error handlers
-- Graceful degradation
+- Result/Either types ({ ok: true, value } or { ok: false, error })
+- Maybe/Option types (handle null/undefined functionally)
+- Railway-oriented programming (chain Result types)
+- Error middleware as pure functions
+- Explicit error returns (avoid throwing when possible)
+- Validation with composable validators
 
 ## When to Use
 
@@ -130,11 +131,18 @@ Works with any JavaScript/TypeScript codebase. Patterns are implemented in vanil
 - Generics enable type-safe pattern implementations
 - Discriminated unions support State pattern
 
-**Functional Mode**:
+**Functional Mode** (PREFERRED INTEGRATION):
 
-- Many patterns have functional equivalents (Strategy → HOF, Command → functions)
-- Some patterns are inherently functional (Functor, Monad)
+- **This mode now prioritizes functional patterns by default**
+- Classical OOP patterns have simpler functional equivalents:
+  - Strategy → Functions as first-class values
+  - Decorator → Higher-order functions
+  - Command → Plain objects with functions
+  - Factory → Factory functions returning plain objects
+  - State → Discriminated unions with pure transitions
+- Functional patterns: Functor, Monad, Lens, Transducer
 - Functional reactive programming patterns
+- **Consult Functional Mode for deeper FP concepts**
 
 ## Standard Workflow
 
@@ -215,47 +223,38 @@ function processData(data, formatType) {
   }
 }
 
-// Pattern: Strategy Pattern (interchangeable algorithms)
-class JSONFormatter {
-  format(data) {
-    return JSON.stringify(data);
-  }
-}
+// PREFERRED: Functional Strategy Pattern (functions as first-class values)
+const formatters = {
+  json: (data) => JSON.stringify(data),
+  xml: (data) => convertToXML(data),
+  csv: (data) => convertToCSV(data)
+};
 
-class XMLFormatter {
-  format(data) {
-    return convertToXML(data);
-  }
-}
+// Simple data processing with function lookup
+const processData = (data, formatType) => {
+  const formatter = formatters[formatType];
+  if (!formatter) throw new Error(`Unknown format: ${formatType}`);
+  return formatter(data);
+};
 
-class CSVFormatter {
-  format(data) {
-    return convertToCSV(data);
-  }
-}
-
-class DataProcessor {
-  constructor(formatter) {
-    this.formatter = formatter;
-  }
-
-  process(data) {
-    return this.formatter.format(data);
-  }
-}
+// Or with higher-order function for partial application
+const createProcessor = (formatter) => (data) => formatter(data);
 
 // Usage
-const processor = new DataProcessor(new JSONFormatter());
-processor.process(data);
+const jsonProcessor = createProcessor(formatters.json);
+jsonProcessor(data);
+
+// Or direct invocation
+processData(data, 'json');
 ```
 
 ### Trade-offs
 
 Explain benefits and costs:
 
-- **Benefits**: Extensible (add new formatters without modifying processor), testable, follows Open/Closed principle
-- **Costs**: More classes, slight verbosity
-- **When to use**: Multiple algorithms, need to swap at runtime, want extensibility
+- **Benefits**: Simple data structures, extensible (add formatters to object), testable (pure functions), composable, no class overhead
+- **Costs**: Minimal - just plain objects and functions
+- **When to use**: Multiple algorithms, need to swap at runtime, want extensibility without classes
 
 ### Verification
 
@@ -268,7 +267,288 @@ How to confirm pattern improves design:
 
 ## Examples
 
-### Example 1: Singleton Pattern
+### Example 1: Function Composition & Pipelines
+
+**Build complex transformations from simple functions**:
+
+```javascript
+// Simple composable functions
+const addTax = (rate) => (price) => price * (1 + rate);
+const applyDiscount = (discount) => (price) => price * (1 - discount);
+const formatCurrency = (price) => `$${price.toFixed(2)}`;
+
+// Compose functions (right to left)
+const compose = (...fns) => (x) => fns.reduceRight((acc, fn) => fn(acc), x);
+
+// Pipe functions (left to right - more readable)
+const pipe = (...fns) => (x) => fns.reduce((acc, fn) => fn(acc), x);
+
+// Build pricing pipeline
+const calculateFinalPrice = pipe(
+  applyDiscount(0.1),    // 10% discount
+  addTax(0.08),          // 8% tax
+  formatCurrency         // format as currency
+);
+
+// Usage
+const basePrice = 100;
+console.log(calculateFinalPrice(basePrice)); // "$99.00"
+
+// Data transformations with pipelines
+const processUserData = pipe(
+  (users) => users.filter(u => u.active),
+  (users) => users.map(u => ({ ...u, name: u.name.toUpperCase() })),
+  (users) => users.sort((a, b) => a.name.localeCompare(b.name))
+);
+
+const users = [
+  { name: 'alice', active: true },
+  { name: 'bob', active: false },
+  { name: 'charlie', active: true }
+];
+
+console.log(processUserData(users));
+// [{ name: 'ALICE', active: true }, { name: 'CHARLIE', active: true }]
+```
+
+### Example 2: Higher-Order Functions for Patterns
+
+**Decorator pattern without classes**:
+
+```javascript
+// Base function
+const greet = (name) => `Hello, ${name}!`;
+
+// Decorators as higher-order functions
+const withLogging = (fn) => (...args) => {
+  console.log(`Calling with args:`, args);
+  const result = fn(...args);
+  console.log(`Result:`, result);
+  return result;
+};
+
+const withTiming = (fn) => (...args) => {
+  const start = Date.now();
+  const result = fn(...args);
+  console.log(`Execution time: ${Date.now() - start}ms`);
+  return result;
+};
+
+const withCache = (fn) => {
+  const cache = new Map();
+  return (...args) => {
+    const key = JSON.stringify(args);
+    if (cache.has(key)) return cache.get(key);
+    const result = fn(...args);
+    cache.set(key, result);
+    return result;
+  };
+};
+
+// Compose decorators
+const enhancedGreet = pipe(
+  withCache,
+  withTiming,
+  withLogging
+)(greet);
+
+// Usage
+enhancedGreet('Alice');
+```
+
+### Example 3: State Management with Plain Objects
+
+**Immutable state updates with reducers**:
+
+```javascript
+// State is plain object
+const initialState = {
+  count: 0,
+  todos: [],
+  user: null
+};
+
+// Actions are plain objects with type discriminator
+const createAction = (type, payload) => ({ type, payload });
+
+// Reducer is pure function: (state, action) => newState
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'INCREMENT':
+      return { ...state, count: state.count + 1 };
+
+    case 'ADD_TODO':
+      return {
+        ...state,
+        todos: [...state.todos, action.payload]
+      };
+
+    case 'TOGGLE_TODO':
+      return {
+        ...state,
+        todos: state.todos.map(todo =>
+          todo.id === action.payload
+            ? { ...todo, completed: !todo.completed }
+            : todo
+        )
+      };
+
+    case 'SET_USER':
+      return { ...state, user: action.payload };
+
+    default:
+      return state;
+  }
+};
+
+// Simple store using closures
+const createStore = (reducer, initialState) => {
+  let state = initialState;
+  let listeners = [];
+
+  return {
+    getState: () => state,
+    dispatch: (action) => {
+      state = reducer(state, action);
+      listeners.forEach(listener => listener(state));
+    },
+    subscribe: (listener) => {
+      listeners.push(listener);
+      return () => {
+        listeners = listeners.filter(l => l !== listener);
+      };
+    }
+  };
+};
+
+// Usage
+const store = createStore(reducer, initialState);
+
+store.subscribe((state) => {
+  console.log('State updated:', state);
+});
+
+store.dispatch(createAction('INCREMENT'));
+store.dispatch(createAction('ADD_TODO', { id: 1, text: 'Learn FP', completed: false }));
+store.dispatch(createAction('TOGGLE_TODO', 1));
+```
+
+### Example 4: Result/Either Type for Error Handling
+
+**Functional error handling without exceptions**:
+
+```javascript
+// Result type - simple discriminated union
+const Ok = (value) => ({ ok: true, value });
+const Err = (error) => ({ ok: false, error });
+
+// Helper functions for Result type
+const map = (fn) => (result) =>
+  result.ok ? Ok(fn(result.value)) : result;
+
+const flatMap = (fn) => (result) =>
+  result.ok ? fn(result.value) : result;
+
+const getOrElse = (defaultValue) => (result) =>
+  result.ok ? result.value : defaultValue;
+
+// Example usage - parse and validate user input
+const parseJSON = (str) => {
+  try {
+    return Ok(JSON.parse(str));
+  } catch (e) {
+    return Err(`Invalid JSON: ${e.message}`);
+  }
+};
+
+const validateUser = (user) =>
+  user.name && user.email
+    ? Ok(user)
+    : Err('User must have name and email');
+
+const normalizeUser = (user) =>
+  Ok({ ...user, name: user.name.toLowerCase() });
+
+// Compose operations that may fail
+const processUserInput = pipe(
+  parseJSON,
+  flatMap(validateUser),
+  flatMap(normalizeUser)
+);
+
+// Usage
+const validInput = '{"name":"Alice","email":"alice@example.com"}';
+const invalidInput = '{"name":"Bob"}';
+
+const result1 = processUserInput(validInput);
+console.log(result1); // Ok({ name: "alice", email: "alice@example.com" })
+
+const result2 = processUserInput(invalidInput);
+console.log(result2); // Err("User must have name and email")
+
+// Extract value with default
+console.log(getOrElse({ name: 'guest', email: '' })(result2));
+```
+
+### Example 5: Currying & Partial Application
+
+**Pre-configure functions for reuse**:
+
+```javascript
+// Generic curry utility
+const curry = (fn) => {
+  const arity = fn.length;
+  return function curried(...args) {
+    if (args.length >= arity) return fn(...args);
+    return (...moreArgs) => curried(...args, ...moreArgs);
+  };
+};
+
+// Curried functions
+const add = curry((a, b) => a + b);
+const multiply = curry((a, b) => a * b);
+const map = curry((fn, arr) => arr.map(fn));
+const filter = curry((pred, arr) => arr.filter(pred));
+
+// Create specialized functions via partial application
+const add10 = add(10);
+const double = multiply(2);
+const isEven = (n) => n % 2 === 0;
+
+console.log(add10(5));  // 15
+console.log(double(5)); // 10
+
+// Compose with curried functions
+const numbers = [1, 2, 3, 4, 5];
+
+const evenDoubled = pipe(
+  filter(isEven),
+  map(double)
+);
+
+console.log(evenDoubled(numbers)); // [4, 8]
+
+// Point-free style (no explicit arguments)
+const getActiveUserNames = pipe(
+  filter(user => user.active),
+  map(user => user.name),
+  map(name => name.toUpperCase())
+);
+
+const users = [
+  { name: 'alice', active: true },
+  { name: 'bob', active: false },
+  { name: 'charlie', active: true }
+];
+
+console.log(getActiveUserNames(users)); // ['ALICE', 'CHARLIE']
+```
+
+---
+
+## Classical OOP Examples (Use When Functional Approach is Insufficient)
+
+### Example 6: Singleton Pattern
 
 **Ensure single instance**:
 
@@ -332,113 +612,105 @@ class Database {
 export default Database;
 ```
 
-### Example 2: Factory Pattern
+### Example 7: Factory Pattern (Functional Alternative: Factory Functions)
 
-**Create objects without specifying exact class**:
+**Prefer factory functions returning plain objects**:
 
 ```javascript
-// Product interface (different user types)
-class User {
-  constructor(name) {
-    this.name = name;
-  }
-}
+// Factory functions (no classes needed)
+const createAdmin = (name) => ({
+  name,
+  role: 'admin',
+  permissions: ['read', 'write', 'delete']
+});
 
-class Admin extends User {
-  constructor(name) {
-    super(name);
-    this.role = 'admin';
-    this.permissions = ['read', 'write', 'delete'];
-  }
-}
+const createGuest = (name) => ({
+  name,
+  role: 'guest',
+  permissions: ['read']
+});
 
-class Guest extends User {
-  constructor(name) {
-    super(name);
-    this.role = 'guest';
-    this.permissions = ['read'];
-  }
-}
+const createModerator = (name) => ({
+  name,
+  role: 'moderator',
+  permissions: ['read', 'write']
+});
 
-class Moderator extends User {
-  constructor(name) {
-    super(name);
-    this.role = 'moderator';
-    this.permissions = ['read', 'write'];
-  }
-}
+// Factory lookup (simple object mapping)
+const userFactories = {
+  admin: createAdmin,
+  guest: createGuest,
+  moderator: createModerator
+};
 
-// Factory
-class UserFactory {
-  createUser(type, name) {
-    switch (type) {
-      case 'admin':
-        return new Admin(name);
-      case 'moderator':
-        return new Moderator(name);
-      case 'guest':
-        return new Guest(name);
-      default:
-        throw new Error(`Unknown user type: ${type}`);
-    }
-  }
-}
+// Generic factory function
+const createUser = (type, name) => {
+  const factory = userFactories[type];
+  if (!factory) throw new Error(`Unknown user type: ${type}`);
+  return factory(name);
+};
 
 // Usage
-const factory = new UserFactory();
-const admin = factory.createUser('admin', 'Alice');
-const guest = factory.createUser('guest', 'Bob');
+const admin = createUser('admin', 'Alice');
+const guest = createUser('guest', 'Bob');
 
 console.log(admin.permissions); // ['read', 'write', 'delete']
 console.log(guest.permissions); // ['read']
+
+// Easy to add behavior via composition
+const withTimestamp = (user) => ({
+  ...user,
+  createdAt: new Date()
+});
+
+const adminWithTimestamp = withTimestamp(createAdmin('Charlie'));
 ```
 
-### Example 3: Observer Pattern (Pub/Sub)
+### Example 8: Observer Pattern (Functional Pub/Sub)
 
-**Event subscription and notification**:
+**Event subscription with closures (no classes)**:
 
 ```javascript
-class EventEmitter {
-  constructor() {
-    this.events = {};
-  }
+// Functional event emitter using closures
+const createEventEmitter = () => {
+  const events = {};
 
-  on(event, callback) {
-    if (!this.events[event]) {
-      this.events[event] = [];
+  return {
+    on: (event, callback) => {
+      if (!events[event]) events[event] = [];
+      events[event].push(callback);
+
+      // Return unsubscribe function
+      return () => {
+        events[event] = events[event].filter(cb => cb !== callback);
+      };
+    },
+
+    emit: (event, ...args) => {
+      if (!events[event]) return;
+      events[event].forEach(callback => callback(...args));
+    },
+
+    once: (event, callback) => {
+      const onceCallback = (...args) => {
+        callback(...args);
+        events[event] = events[event].filter(cb => cb !== onceCallback);
+      };
+      if (!events[event]) events[event] = [];
+      events[event].push(onceCallback);
     }
-    this.events[event].push(callback);
-  }
-
-  off(event, callback) {
-    if (!this.events[event]) return;
-
-    this.events[event] = this.events[event].filter(cb => cb !== callback);
-  }
-
-  emit(event, ...args) {
-    if (!this.events[event]) return;
-
-    this.events[event].forEach(callback => callback(...args));
-  }
-
-  once(event, callback) {
-    const onceCallback = (...args) => {
-      callback(...args);
-      this.off(event, onceCallback);
-    };
-    this.on(event, onceCallback);
-  }
-}
+  };
+};
 
 // Usage
-const emitter = new EventEmitter();
+const emitter = createEventEmitter();
 
-function handleUserLogin(user) {
+const handleUserLogin = (user) => {
   console.log(`User logged in: ${user.name}`);
-}
+};
 
-emitter.on('user:login', handleUserLogin);
+// Subscribe and get unsubscribe function
+const unsubscribe = emitter.on('user:login', handleUserLogin);
 emitter.on('user:login', (user) => {
   console.log(`Welcome ${user.name}!`);
 });
@@ -447,351 +719,284 @@ emitter.emit('user:login', { name: 'Alice' });
 // User logged in: Alice
 // Welcome Alice!
 
-emitter.off('user:login', handleUserLogin);
+// Clean unsubscribe
+unsubscribe();
 emitter.emit('user:login', { name: 'Bob' });
 // Welcome Bob! (only second listener fires)
 ```
 
-### Example 4: Decorator Pattern
+### Example 9: Command Pattern (Functional Alternative)
 
-**Add behavior dynamically**:
+**Commands as plain objects with functions**:
 
 ```javascript
-// Base component
-class Coffee {
-  cost() {
-    return 5;
-  }
+// State is simple - just the text
+let editorText = '';
 
-  description() {
-    return 'Coffee';
-  }
-}
+// Command creators return plain objects
+const createAppendCommand = (text) => ({
+  type: 'APPEND',
+  text,
+  execute: (state) => state + text,
+  undo: (state) => state.slice(0, -text.length)
+});
 
-// Decorators
-class MilkDecorator {
-  constructor(coffee) {
-    this.coffee = coffee;
-  }
+const createDeleteCommand = (length) => ({
+  type: 'DELETE',
+  length,
+  execute: (state) => state.slice(0, -length),
+  undo: (state, deletedText) => state + deletedText
+});
 
-  cost() {
-    return this.coffee.cost() + 1;
-  }
+// Command history with closures
+const createCommandHistory = (initialState) => {
+  let state = initialState;
+  let history = [];
+  let current = -1;
 
-  description() {
-    return this.coffee.description() + ', Milk';
-  }
-}
+  return {
+    getState: () => state,
 
-class SugarDecorator {
-  constructor(coffee) {
-    this.coffee = coffee;
-  }
+    execute: (command) => {
+      // Remove any commands after current position
+      history = history.slice(0, current + 1);
 
-  cost() {
-    return this.coffee.cost() + 0.5;
-  }
+      const previousState = state;
+      state = command.execute(state);
 
-  description() {
-    return this.coffee.description() + ', Sugar';
-  }
-}
+      history.push({ command, previousState });
+      current++;
+    },
 
-class WhipDecorator {
-  constructor(coffee) {
-    this.coffee = coffee;
-  }
+    undo: () => {
+      if (current < 0) return;
 
-  cost() {
-    return this.coffee.cost() + 2;
-  }
+      const { command, previousState } = history[current];
+      state = previousState;
+      current--;
+    },
 
-  description() {
-    return this.coffee.description() + ', Whipped Cream';
-  }
-}
+    redo: () => {
+      if (current >= history.length - 1) return;
+
+      current++;
+      const { command } = history[current];
+      state = command.execute(state);
+    }
+  };
+};
 
 // Usage
-let coffee = new Coffee();
-console.log(coffee.description(), '- $' + coffee.cost()); // Coffee - $5
+const history = createCommandHistory('');
 
-coffee = new MilkDecorator(coffee);
-console.log(coffee.description(), '- $' + coffee.cost()); // Coffee, Milk - $6
-
-coffee = new SugarDecorator(coffee);
-console.log(coffee.description(), '- $' + coffee.cost()); // Coffee, Milk, Sugar - $6.5
-
-coffee = new WhipDecorator(coffee);
-console.log(coffee.description(), '- $' + coffee.cost()); // Coffee, Milk, Sugar, Whipped Cream - $8.5
-```
-
-### Example 5: Command Pattern
-
-**Encapsulate requests as objects**:
-
-```javascript
-// Receiver
-class TextEditor {
-  constructor() {
-    this.text = '';
-  }
-
-  append(text) {
-    this.text += text;
-  }
-
-  delete(length) {
-    this.text = this.text.slice(0, -length);
-  }
-
-  getText() {
-    return this.text;
-  }
-}
-
-// Commands
-class AppendCommand {
-  constructor(editor, text) {
-    this.editor = editor;
-    this.text = text;
-  }
-
-  execute() {
-    this.editor.append(this.text);
-  }
-
-  undo() {
-    this.editor.delete(this.text.length);
-  }
-}
-
-class DeleteCommand {
-  constructor(editor, length) {
-    this.editor = editor;
-    this.length = length;
-    this.deletedText = '';
-  }
-
-  execute() {
-    this.deletedText = this.editor.getText().slice(-this.length);
-    this.editor.delete(this.length);
-  }
-
-  undo() {
-    this.editor.append(this.deletedText);
-  }
-}
-
-// Invoker (with undo/redo)
-class CommandHistory {
-  constructor() {
-    this.history = [];
-    this.current = -1;
-  }
-
-  execute(command) {
-    // Remove any commands after current position
-    this.history = this.history.slice(0, this.current + 1);
-
-    command.execute();
-    this.history.push(command);
-    this.current++;
-  }
-
-  undo() {
-    if (this.current < 0) return;
-
-    this.history[this.current].undo();
-    this.current--;
-  }
-
-  redo() {
-    if (this.current >= this.history.length - 1) return;
-
-    this.current++;
-    this.history[this.current].execute();
-  }
-}
-
-// Usage
-const editor = new TextEditor();
-const history = new CommandHistory();
-
-history.execute(new AppendCommand(editor, 'Hello '));
-history.execute(new AppendCommand(editor, 'World'));
-console.log(editor.getText()); // "Hello World"
+history.execute(createAppendCommand('Hello '));
+history.execute(createAppendCommand('World'));
+console.log(history.getState()); // "Hello World"
 
 history.undo();
-console.log(editor.getText()); // "Hello "
+console.log(history.getState()); // "Hello "
 
 history.undo();
-console.log(editor.getText()); // ""
+console.log(history.getState()); // ""
 
 history.redo();
-console.log(editor.getText()); // "Hello "
+console.log(history.getState()); // "Hello "
 
 history.redo();
-console.log(editor.getText()); // "Hello World"
+console.log(history.getState()); // "Hello World"
 ```
 
-### Example 6: State Pattern
+### Example 10: State Machine (Functional with Discriminated Unions)
 
-**Behavior changes with state**:
+**State transitions with plain objects**:
 
 ```javascript
-// States
-class DraftState {
-  publish(post) {
-    post.state = new PublishedState();
-    console.log('Post published');
-  }
+// States as discriminated unions (tagged objects)
+const states = {
+  draft: () => ({ status: 'draft' }),
+  published: () => ({ status: 'published' }),
+  archived: () => ({ status: 'archived' })
+};
 
-  delete(post) {
-    console.log('Draft deleted');
-  }
-}
-
-class PublishedState {
-  publish(post) {
+// State transitions as pure functions
+const transitions = {
+  publish: (post) => {
+    if (post.state.status === 'draft') {
+      console.log('Post published');
+      return { ...post, state: states.published() };
+    }
+    if (post.state.status === 'archived') {
+      console.log('Post restored and published');
+      return { ...post, state: states.published() };
+    }
     console.log('Already published');
-  }
+    return post;
+  },
 
-  delete(post) {
+  archive: (post) => {
+    if (post.state.status === 'published') {
+      console.log('Post archived');
+      return { ...post, state: states.archived() };
+    }
+    console.log('Can only archive published posts');
+    return post;
+  },
+
+  delete: (post) => {
+    if (post.state.status === 'draft') {
+      console.log('Draft deleted');
+      return null;
+    }
+    if (post.state.status === 'archived') {
+      console.log('Archived post deleted');
+      return null;
+    }
     console.log('Cannot delete published post');
+    return post;
   }
+};
 
-  archive(post) {
-    post.state = new ArchivedState();
-    console.log('Post archived');
-  }
-}
-
-class ArchivedState {
-  publish(post) {
-    post.state = new PublishedState();
-    console.log('Post restored and published');
-  }
-
-  delete(post) {
-    console.log('Archived post deleted');
-  }
-}
-
-// Context
-class BlogPost {
-  constructor(title, content) {
-    this.title = title;
-    this.content = content;
-    this.state = new DraftState(); // Initial state
-  }
-
-  publish() {
-    this.state.publish(this);
-  }
-
-  delete() {
-    this.state.delete(this);
-  }
-
-  archive() {
-    this.state.archive(this);
-  }
-}
+// Factory function for posts
+const createBlogPost = (title, content) => ({
+  title,
+  content,
+  state: states.draft()
+});
 
 // Usage
-const post = new BlogPost('My Post', 'Content here');
+let post = createBlogPost('My Post', 'Content here');
 
-post.publish();  // Post published
-post.archive();  // Post archived
-post.delete();   // Archived post deleted
+post = transitions.publish(post);  // Post published
+post = transitions.archive(post);  // Post archived
+post = transitions.delete(post);   // Archived post deleted (returns null)
+
+// Alternative: State machine with reducer pattern
+const postReducer = (post, action) => {
+  switch (action.type) {
+    case 'PUBLISH': return transitions.publish(post);
+    case 'ARCHIVE': return transitions.archive(post);
+    case 'DELETE': return transitions.delete(post);
+    default: return post;
+  }
+};
+
+let post2 = createBlogPost('Another Post', 'More content');
+post2 = postReducer(post2, { type: 'PUBLISH' });
+post2 = postReducer(post2, { type: 'ARCHIVE' });
 ```
 
-### Example 7: Module Pattern (Revealing Module)
+### Example 11: Module Pattern (ES6 Modules Preferred)
 
-**Encapsulation with public API**:
+**Encapsulation with ES6 modules (preferred) or closures**:
 
 ```javascript
-const UserModule = (function() {
-  // Private variables
+// PREFERRED: ES6 Module (userModule.js)
+// Private state and functions (not exported)
+let users = [];
+let nextId = 1;
+
+const validateUser = (user) => {
+  if (!user.name || !user.email) {
+    throw new Error('Invalid user data');
+  }
+};
+
+const findUserIndex = (id) =>
+  users.findIndex(user => user.id === id);
+
+// Public API (exported functions)
+export const addUser = (name, email) => {
+  const user = { id: nextId++, name, email };
+  validateUser(user);
+  users.push(user);
+  return user;
+};
+
+export const getUser = (id) =>
+  users.find(user => user.id === id);
+
+export const getAllUsers = () => [...users];
+
+export const updateUser = (id, updates) => {
+  const index = findUserIndex(id);
+  if (index === -1) throw new Error('User not found');
+  users[index] = { ...users[index], ...updates };
+  validateUser(users[index]);
+  return users[index];
+};
+
+export const deleteUser = (id) => {
+  const index = findUserIndex(id);
+  if (index === -1) throw new Error('User not found');
+  return users.splice(index, 1)[0];
+};
+
+// Usage (in another file)
+import { addUser, getUser, getAllUsers } from './userModule.js';
+
+const user1 = addUser('Alice', 'alice@example.com');
+const user2 = addUser('Bob', 'bob@example.com');
+
+console.log(getAllUsers()); // [{ id: 1, ... }, { id: 2, ... }]
+console.log(getUser(1));    // { id: 1, name: 'Alice', ... }
+
+// ALTERNATIVE: Closure-based module (if ES6 modules unavailable)
+const createUserModule = () => {
   let users = [];
   let nextId = 1;
 
-  // Private functions
-  function validateUser(user) {
-    if (!user.name || !user.email) {
-      throw new Error('Invalid user data');
-    }
-  }
+  const validateUser = (user) => {
+    if (!user.name || !user.email) throw new Error('Invalid user data');
+  };
 
-  function findUserIndex(id) {
-    return users.findIndex(user => user.id === id);
-  }
-
-  // Public API
   return {
-    addUser(name, email) {
+    addUser: (name, email) => {
       const user = { id: nextId++, name, email };
       validateUser(user);
       users.push(user);
       return user;
     },
-
-    getUser(id) {
-      return users.find(user => user.id === id);
-    },
-
-    getAllUsers() {
-      return [...users]; // Return copy
-    },
-
-    updateUser(id, updates) {
-      const index = findUserIndex(id);
-      if (index === -1) {
-        throw new Error('User not found');
-      }
-      users[index] = { ...users[index], ...updates };
-      validateUser(users[index]);
-      return users[index];
-    },
-
-    deleteUser(id) {
-      const index = findUserIndex(id);
-      if (index === -1) {
-        throw new Error('User not found');
-      }
-      return users.splice(index, 1)[0];
-    }
+    getUser: (id) => users.find(user => user.id === id),
+    getAllUsers: () => [...users]
   };
-})();
+};
 
-// Usage
-const user1 = UserModule.addUser('Alice', 'alice@example.com');
-const user2 = UserModule.addUser('Bob', 'bob@example.com');
-
-console.log(UserModule.getAllUsers()); // [{ id: 1, ... }, { id: 2, ... }]
-console.log(UserModule.getUser(1));    // { id: 1, name: 'Alice', ... }
-
-// Cannot access private variables
-console.log(UserModule.users);  // undefined
+const userModule = createUserModule();
 ```
 
 ## Design Pattern Checklist
 
 **When choosing a pattern, ask**:
 
+**Can I solve this with plain functions and data structures?** (Try this first!)
+
 - Does this pattern solve my specific problem?
 - Will it reduce complexity or add unnecessary abstraction?
+  
+**Am I reaching for classes when functions would suffice?**
+
 - Do team members understand this pattern?
 - Is the pattern appropriate for the problem scale?
 - Are there simpler alternatives?
 
+**Functional-first approach**:
+
+1. **Start with functions and plain objects** - Most problems can be solved with composable functions
+2. **Use discriminated unions over class hierarchies** - Tagged objects are simpler
+3. **Prefer immutable data transformations** - map, filter, reduce over mutation
+4. **Leverage closures for encapsulation** - No need for private class fields
+5. **Higher-order functions over strategy classes** - Pass functions directly
+6. **Use ES6 modules for organization** - Not class-based namespaces
+
 **Common anti-patterns to avoid**:
 
-- Over-engineering simple problems
+- Over-engineering simple problems with classes
 - Using patterns for the sake of using patterns
-- Copy-pasting patterns without understanding
-- Ignoring JavaScript idioms in favor of classical OOP
+- Reaching for OOP when functional approach is simpler
+- Creating class hierarchies when plain objects suffice
+- Ignoring JavaScript's functional capabilities
 - Creating unnecessary abstraction layers
+- Premature optimization with complex patterns
 
 ## References
 
